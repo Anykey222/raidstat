@@ -147,6 +147,10 @@ class AttendanceProcessor:
                 self.logger.info("Обработка посещаемости прервана (фаза сканирования).")
                 return 0
 
+            # Пропускаем папку errors
+            if 'errors' in dirs:
+                dirs.remove('errors')
+
             # Вычисляем глубину относительно folder_path
             rel_path = os.path.relpath(root, folder_path)
             if rel_path == '.':

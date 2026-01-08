@@ -501,7 +501,7 @@ class App(ctk.CTk):
         card_debug.pack(fill="x", pady=10)
         
         self.var_show = ctk.BooleanVar(value=self.processor.config.show_afterscreen)
-        ctk.CTkCheckBox(card_debug, text="Открывать Excel после обработки", variable=self.var_show, command=self.save_settings).pack(anchor="w", padx=20, pady=(20, 10))
+        ctk.CTkCheckBox(card_debug, text="Открывать результирующие скриншоты", variable=self.var_show, command=self.save_settings).pack(anchor="w", padx=20, pady=(20, 10))
         
         self.var_debug_screens = ctk.BooleanVar(value=self.processor.config.get("debug_screens"))
         ctk.CTkCheckBox(card_debug, text="Сохранять отладочные скриншоты", variable=self.var_debug_screens, command=self.save_settings).pack(anchor="w", padx=20, pady=10)
@@ -539,7 +539,7 @@ class App(ctk.CTk):
         self.btn_youtube = ctk.CTkButton(
             btn_box, 
             text="🎥 Видео-гайд (YouTube)", 
-            command=lambda: webbrowser.open("https://youtube.com/"), 
+            command=lambda: webbrowser.open("https://www.youtube.com/watch?v=Tz78oDmg_y4"), 
             fg_color="#c4302b", 
             hover_color="#a82925",
             width=200
@@ -550,18 +550,42 @@ class App(ctk.CTk):
         donate_card = ctk.CTkFrame(parent, fg_color="#0ea5e9", corner_radius=15) # Sky blue
         donate_card.pack(fill="x", pady=20)
         
-        ctk.CTkLabel(donate_card, text="❤️ Поддержать проект", font=ctk.CTkFont(size=18, weight="bold"), text_color="white").pack(pady=(15, 5))
-        ctk.CTkLabel(donate_card, text="Ваша поддержка помогает проекту развиваться быстрее.", text_color="white").pack(pady=5)
+        ctk.CTkLabel(donate_card, text="❤️ Поддержка проекта", font=ctk.CTkFont(size=18, weight="bold"), text_color="white").pack(pady=(15, 5))
+        ctk.CTkLabel(donate_card, text="Если вам понравилась программа, вы можете поблагодарить автора следующими способами:", text_color="white", wraplength=500).pack(pady=5)
         
+        methods_frame = ctk.CTkFrame(donate_card, fg_color="transparent")
+        methods_frame.pack(pady=10)
+
+        # CloudTips
         ctk.CTkButton(
-            donate_card, 
-            text="Отправить донат (CloudTips)", 
+            methods_frame, 
+            text="Отправить через CloudTips", 
             command=lambda: webbrowser.open("https://pay.cloudtips.ru/p/17913652"),
             fg_color="white", 
             text_color="#0284c7",
             hover_color="#f0f9ff", 
-            font=ctk.CTkFont(weight="bold")
-        ).pack(pady=(10, 20))
+            font=ctk.CTkFont(weight="bold"),
+            width=220
+        ).pack(side="left", padx=10)
+
+        # Card
+        card_number = "2200 1546 2918 6411"
+        card_frame = ctk.CTkFrame(methods_frame, fg_color="#38bdf8", corner_radius=8, cursor="hand2")
+        card_frame.pack(side="left", padx=10)
+        
+        lbl_card = ctk.CTkLabel(
+            card_frame, 
+            text=f"{card_number} (Альфа-Банк)", 
+            font=ctk.CTkFont(family="Consolas", size=14, weight="bold"), 
+            text_color="white",
+            cursor="hand2"
+        )
+        lbl_card.pack(padx=15, pady=8)
+        
+        # Копирование при клике
+        copy_cmd = lambda e: self.copy_simple_text(card_number.replace(" ", ""))
+        lbl_card.bind("<Button-1>", copy_cmd)
+        card_frame.bind("<Button-1>", copy_cmd)
 
     # --- Logic ---
 
@@ -592,6 +616,15 @@ class App(ctk.CTk):
         except Exception as e:
             logging.error(f"Ошибка копирования: {e}")
         return "break"
+
+    def copy_simple_text(self, text):
+        try:
+            self.clipboard_clear()
+            self.clipboard_append(text)
+            self.update()
+            logging.info(f"Текст скопирован в буфер обмена: {text}")
+        except Exception as e:
+            logging.error(f"Не удалось скопировать текст: {e}")
 
     def on_ocr_change(self, choice):
         self.toggle_api_key(choice)

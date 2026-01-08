@@ -70,6 +70,10 @@ class StatisticsProcessor:
                 self.logger.info("Обработка статистики прервана (этап сканирования).")
                 return 0
 
+            # Пропускаем папку errors
+            if 'errors' in dirs:
+                dirs.remove('errors')
+
             for file in files:
                 if file.lower().endswith(('.jpg', '.jpeg', '.png', '.bmp')):
                     image_files.append(os.path.join(root, file))

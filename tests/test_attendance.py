@@ -159,7 +159,7 @@ class TestAttendanceProcessor:
             "Мицеюшка", "Mrlv", "Rokurou", "Мятнаяк", "Испепел", "Flm"
         ]
 
-        self._run_attendance_test("120_bad.jpg", 120, "offline", coords, known_names=self.EXPECTED_NAMES, replacements={"Di.*": "Dimonish"}, max_missing=1)
+        self._run_attendance_test("120_bad.jpg", 120, "offline", coords, known_names=self.EXPECTED_NAMES, replacements={"^Di.*": "Dimonish"}, max_missing=1)
 
     def test_attendance_mode_100(self):
         """Тест режима посещаемости на скриншоте 100.jpg с масштабом 100. оффлайн."""

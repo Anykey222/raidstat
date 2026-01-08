@@ -11,7 +11,7 @@ class Config:
         "screenshots_directory": "",  # Последняя выбранная директория со скриншотами
         "show_afterscreen": False,
         "debug_screens": False,
-        "recursive_scan": False,
+        "recursive_scan": True,
         "ocr_mode": "offline",
         "ocr_api_key": "",
         "debug": False
