@@ -1,0 +1,76 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # Срабатывает при создании тега версии (например, v1.0.0)
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyinstaller
+    
+    - name: Run tests
+      run: |
+        pip install pytest
+        $env:PYTHONIOENCODING = "utf-8"
+        pytest tests/ -v
+      shell: pwsh
+
+    - name: Build executable
+      run: |
+        pyinstaller raidstat.spec
+    
+    - name: Get version from tag
+      id: get_version
+      run: |
+        $version = $env:GITHUB_REF -replace 'refs/tags/', ''
+        echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+      shell: pwsh
+    
+    - name: Create archive
+      run: |
+        $version = "${{ steps.get_version.outputs.VERSION }}"
+        Compress-Archive -Path dist/RaidStat/* -DestinationPath "RaidStat-$version.zip"
+      shell: pwsh
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: RaidStat-${{ steps.get_version.outputs.VERSION }}.zip
+        body: |
+          ## 📦 Установка
+          
+          1. Скачайте архив `RaidStat-${{ steps.get_version.outputs.VERSION }}.zip`
+          2. Распакуйте в любую папку
+          3. Запустите `RaidStat.exe`
+          
+          ## 🔒 Безопасность
+          
+          Этот релиз собран автоматически через GitHub Actions из исходного кода.
+          Вы можете проверить процесс сборки во вкладке [Actions](https://github.com/${{ github.repository }}/actions).
+          
+          ## 📝 Изменения
+          
+          См. [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md)
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

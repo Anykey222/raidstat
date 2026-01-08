@@ -1,0 +1,43 @@
+# Автоматическое определение текстовых файлов и нормализация переносов строк
+* text=auto
+
+# Исходный код
+*.py text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+
+# Конфигурационные файлы
+*.cfg text eol=lf
+*.ini text eol=lf
+.gitignore text eol=lf
+.gitattributes text eol=lf
+
+# Скрипты
+*.sh text eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Бинарные файлы
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.exe binary
+*.dll binary
+*.so binary
+*.dylib binary
+*.zip binary
+*.7z binary
+*.rar binary
+*.xlsx binary
+*.xls binary
+*.pdf binary
+
+# Tesseract данные
+*.traineddata binary

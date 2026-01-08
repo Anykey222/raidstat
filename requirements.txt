@@ -1,0 +1,11 @@
+opencv-python-headless
+numpy
+pytesseract
+pandas
+openpyxl
+customtkinter
+thefuzz
+Pillow
+pytest
+requests
+pywin32
